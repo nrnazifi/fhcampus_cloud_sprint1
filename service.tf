@@ -12,9 +12,9 @@ resource "exoscale_nlb_service" "website_service" {
   healthcheck {
     mode     = "http"
     port     = 80
-    uri      = "/"
+    uri      = "/health"
     interval = 10
-    timeout  = 5
+    timeout  = 10
     retries  = 1
   }
 }

@@ -26,6 +26,10 @@ resource "exoscale_instance_pool" "webapp" {
 #!/bin/bash
 set -e
 apt update
-apt install -y nginx
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo docker pull janoszen/http-load-generator:latest
+sudo docker run -d --rm -p 80:8080 janoszen/http-load-generator
 EOF
 }
