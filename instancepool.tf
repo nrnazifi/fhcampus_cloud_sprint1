@@ -31,5 +31,8 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo docker pull janoszen/http-load-generator:latest
 sudo docker run -d --rm -p 80:8080 janoszen/http-load-generator
+
+sudo docker run -d --net=host -v /:/hostfs prom/node-exporter --path.rootfs=/hostfs
+
 EOF
 }
