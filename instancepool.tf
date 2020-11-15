@@ -22,7 +22,7 @@ resource "exoscale_instance_pool" "webapp" {
     delete = "10m"
   }
   
-    user_data = <<EOF
+  user_data = <<EOF
 #!/bin/bash
 set -e
 apt update
@@ -32,7 +32,7 @@ sudo sh get-docker.sh
 sudo docker pull janoszen/http-load-generator:latest
 sudo docker run -d --rm -p 80:8080 janoszen/http-load-generator
 
-sudo docker run -d --net=host -v /:/hostfs prom/node-exporter --path.rootfs=/hostfs
+sudo docker run -d --net=host -v "/:/hostfs" prom/node-exporter --path.rootfs=/hostfs
 
 EOF
 }

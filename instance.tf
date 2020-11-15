@@ -4,14 +4,14 @@ data "template_file" "prometheus_config" {
 
 resource "exoscale_compute" "prometheus" {
   zone         = var.zone
-  display_name = "prometheus_server"
+  display_name = "prometheus"
   template_id  = data.exoscale_compute_template.ubuntu.id
   size         = "Micro"
   disk_size    = 10
   key_pair     = ""
-  security_groups = [exoscale_security_group.sg.name]
+  security_group_ids = [exoscale_security_group.sg.id]
 
-  user_data = <<EOPF
+  user_data = <<EOF
 
 #!/bin/bash
 set -e
@@ -20,12 +20,9 @@ apt update
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 
-sudo mkdir /srv/prometheus
-sudo touch /srv/prometheus/prometheus.yml
-sudo touch /srv/prometheus/servicediscovery.json
-sudo echo "${data.template_file.prometheus_config.rendered}" > /srv/prometheus/prometheus.yml
+sudo touch /srv/prometheus.yml
+sudo echo "${data.template_file.prometheus_config.rendered}" > /srv/prometheus.yml
+sudo docker run -d --net=host -v /srv/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 
-sudo docker run -d --net=host -v /srv/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v /srv/prometheus/servicediscovery.json:/service-discovery/servicediscovery.json prom/prometheus
-
-EOPF
+EOF
 }
