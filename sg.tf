@@ -5,7 +5,7 @@ variable "admin_ip" {
 }
 
 resource "exoscale_security_group" "sg" {
-  name = "web"
+  name = "web_sg"
 }
 
 resource "exoscale_security_group_rule" "ssh" {
@@ -35,15 +35,6 @@ resource "exoscale_security_group_rule" "http2" {
   end_port = 8080
 }
 
-resource "exoscale_security_group_rule" "prometheus" {
-  security_group_id = exoscale_security_group.sg.id
-  type = "INGRESS"
-  protocol = "TCP"
-  cidr = var.admin_ip
-  start_port = 9090
-  end_port = 9090
-}
-
 resource "exoscale_security_group_rule" "exporter" {
   security_group_id = exoscale_security_group.sg.id
   type = "INGRESS"
@@ -51,4 +42,26 @@ resource "exoscale_security_group_rule" "exporter" {
   cidr = var.admin_ip
   start_port = 9100
   end_port = 9100
+}
+
+resource "exoscale_security_group" "prometheus_sg" {
+  name = "prometheus_sg"
+}
+
+resource "exoscale_security_group_rule" "prometheus_http" {
+  security_group_id = exoscale_security_group.prometheus_sg.id
+  type = "INGRESS"
+  protocol = "TCP"
+  cidr = var.admin_ip
+  start_port = 9090
+  end_port = 9090
+}
+
+resource "exoscale_security_group_rule" "prometheus_ssh" {
+  security_group_id = exoscale_security_group.prometheus_sg.id
+  type = "INGRESS"
+  protocol = "TCP"
+  cidr = var.admin_ip
+  start_port = 22
+  end_port = 22
 }
