@@ -1,7 +1,3 @@
-variable "zone" {
-  default = "at-vie-1"
-}
-
 data "exoscale_compute_template" "ubuntu" {
   zone = var.zone
   name = "Linux Ubuntu 20.04 LTS 64-bit"
@@ -36,3 +32,4 @@ sudo docker run -d --net=host -v "/:/hostfs" prom/node-exporter --path.rootfs=/h
 
 EOF
 }
+# ref: example for docker run ... prom/node-exporter from https://devconnected.com/how-to-install-prometheus-with-docker-on-ubuntu-18-04/

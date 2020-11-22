@@ -5,12 +5,7 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets: ['localhost:9090']
-  - job_name: 'local_exporter'
-    scrape_interval: 10s
-    static_configs:
-      - targets: ['localhost:9100']
-  - job_name: 'servers'
     file_sd_configs:
       - files:
-          - /service-discovery/servicediscovery.json
+          - /service-discovery/targets.json
         refresh_interval: 10s

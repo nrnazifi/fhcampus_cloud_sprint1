@@ -1,5 +1,5 @@
 resource "exoscale_nlb_service" "website_service" {
-  zone             = exoscale_nlb.nlb_website.zone
+  zone             = var.zone
   name             = "website_service"
   description      = "Website over HTTP"
   nlb_id           = exoscale_nlb.nlb_website.id

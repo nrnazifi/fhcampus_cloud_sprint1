@@ -1,9 +1,3 @@
-variable "admin_ip" {
-  description = "Administrator IP address"
-  type = string
-  default = "0.0.0.0/0"
-}
-
 resource "exoscale_security_group" "sg" {
   name = "web_sg"
 }
