@@ -1,0 +1,67 @@
+#!/bin/bash
+set -e
+apt update
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+sudo mkdir -p /prometheus
+sudo touch /prometheus/targets.json
+cat <<EOCF >/prometheus/prometheus.yml
+${prometheus_yml}
+EOCF
+sudo chown -R ubuntu:ubuntu /prometheus
+
+# Create the network
+docker network create monitoring
+
+# Run service discovery
+sudo docker pull nrnazifi/cloud-servicediscovery
+sudo docker run \
+	-dit --name service_discover \
+	--network monitoring \
+	-e EXOSCALE_KEY=${exoscale_key} \
+	-e EXOSCALE_SECRET=${exoscale_secret} \
+	-e TARGET_PORT=${target_port} \
+	-e EXOSCALE_ZONE=${exoscale_zone} \
+	-e EXOSCALE_INSTANCEPOOL_ID=${instance_pool_id} \
+	-v /prometheus/targets.json:/srv/service-discovery/config.json \
+	nrnazifi/cloud-servicediscovery
+
+# Run prometheus
+sudo docker run -d --name prometheus \
+	--network monitoring -p 9090:9090 \
+	-v /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
+	-v /prometheus/targets.json:/service-discovery/targets.json \
+	prom/prometheus
+    
+# Create garfana files 
+sudo mkdir -p /grafana
+
+cat <<EOCF >/grafana/dashboard.json
+${grafana_dashboard_json}
+EOCF
+
+cat <<EOCF >/grafana/dashboards.yml
+${grafana_dashboards_yml}
+EOCF
+
+cat <<EOCF >/grafana/datasources.yml
+${grafana_datasources_yml}
+EOCF
+
+cat <<EOCF >/grafana/notifications.yml
+${grafana_notifications_yml}
+EOCF
+
+sudo chown -R ubuntu:ubuntu /grafana
+
+# Run garfana 
+sudo docker run -d -p 3000:3000 --name=grafana \
+	--network monitoring \
+	-v /grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml \
+	-v /grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml \
+	-v /grafana/notifications.yml:/etc/grafana/provisioning/notifiers/notifications.yml \
+	-v /grafana/dashboard.json:/etc/grafana/dashboards/dashboard.json \
+	grafana/grafana
+	
