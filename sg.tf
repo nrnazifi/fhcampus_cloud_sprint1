@@ -60,11 +60,20 @@ resource "exoscale_security_group_rule" "prometheus_ssh" {
   end_port = 22
 }
 
-resource "exoscale_security_group_rule" "grafana_htp" {
+resource "exoscale_security_group_rule" "grafana_http" {
   security_group_id = exoscale_security_group.monitoring_sg.id
   type = "INGRESS"
   protocol = "TCP"
   cidr = var.admin_ip
   start_port = 3000
   end_port = 3000
+}
+
+resource "exoscale_security_group_rule" "autoscaler_http" {
+  security_group_id = exoscale_security_group.monitoring_sg.id
+  type = "INGRESS"
+  protocol = "TCP"
+  cidr = var.admin_ip
+  start_port = 8090
+  end_port = 8090
 }
