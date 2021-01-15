@@ -6,6 +6,10 @@ variable "target_port" {
  default = "9100"
 }
 
+variable "listen_port" {
+ default = "8090"
+}
+
 variable "exoscale_key" {
   description = "The Exoscale API key"
   type = string
