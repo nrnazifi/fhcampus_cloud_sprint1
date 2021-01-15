@@ -14,6 +14,7 @@ resource "exoscale_compute" "monitoring" {
     exoscale_secret = var.exoscale_secret
     exoscale_zone = var.zone
 	target_port = var.target_port
+	listen_port = var.listen_port
     instance_pool_id = exoscale_instance_pool.webapp.id
 	prometheus_yml = file("prometheus.yml")
 	grafana_dashboards_yml = file("grafana_dashboards.yml")

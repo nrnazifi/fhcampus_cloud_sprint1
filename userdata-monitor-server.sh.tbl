@@ -65,3 +65,17 @@ sudo docker run -d -p 3000:3000 --name=grafana \
 	-v /grafana/dashboard.json:/etc/grafana/dashboards/dashboard.json \
 	grafana/grafana
 	
+# Run autoscaling
+sudo docker pull nrnazifi/cloud_autoscaling
+sudo docker run \
+	-dit -p 8090:8090 --name autoscaler \
+	--network monitoring \
+	-e EXOSCALE_KEY=${exoscale_key} \
+	-e EXOSCALE_SECRET=${exoscale_secret} \
+	-e LISTEN_PORT=${listen_port} \
+	-e EXOSCALE_ZONE=${exoscale_zone} \
+	-e EXOSCALE_INSTANCEPOOL_ID=${instance_pool_id} \
+	nrnazifi/cloud_autoscaling
+	
+	
+	
