@@ -13,6 +13,12 @@ resource "exoscale_instance_pool" "webapp" {
   description = "This is the production environment for my webapp"
   key_pair = ""
   security_group_ids = [exoscale_security_group.sg.id]
+  
+  lifecycle {
+    ignore_changes = [
+      size
+    ]
+  }
 
   timeouts {
     delete = "10m"
