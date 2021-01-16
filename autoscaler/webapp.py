@@ -25,7 +25,7 @@ def up():
 		ip_size = instancePool.size + 1
 		instancePool.scale(ip_size)
 		
-    return make_response('up', 200)
+	return make_response('up', 200)
 
 @app.route('/down', methods=['POST','GET'])
 def down():
@@ -35,8 +35,8 @@ def down():
 		ip_size = instancePool.size - 1
 		instancePool.scale(ip_size)
 		
-    return make_response('down', 200)
+	return make_response('down', 200)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=listen_port)
+	app.run(debug=True, host='0.0.0.0', port=listen_port)
