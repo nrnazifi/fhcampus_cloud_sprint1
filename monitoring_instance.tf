@@ -4,7 +4,7 @@ resource "exoscale_compute" "monitoring" {
   template_id  = data.exoscale_compute_template.ubuntu.id
   size         = "Micro"
   disk_size    = 10
-  key_pair     = exoscale_ssh_keypair.key.name
+  key_pair     = ""
   
   affinity_groups = []
   security_groups = [exoscale_security_group.monitoring_sg.name]
