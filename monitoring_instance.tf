@@ -2,7 +2,7 @@ resource "exoscale_compute" "monitoring" {
   zone         = var.zone
   display_name = "monitoring"
   template_id  = data.exoscale_compute_template.ubuntu.id
-  size         = "Micro"
+  size         = "Tiny"
   disk_size    = 10
   key_pair     = ""
   
